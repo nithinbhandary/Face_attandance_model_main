@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
+    
+    <script src="{{ url_for('static', filename='javascript/functions.js') }}"></script>
+
+    <title>FACE RECOGNITION MODEL</title>
+    
+    
+</head>
+
+<body>
+    <header>
+        <h1>FACE ATTENDANCE MODEL</h1>
+        <div class="user-info">
+            <span>{{ session['username'] }}</span>
+            <a href="{{ url_for('logout') }}">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </header>
+    <div class="backgroud_side">
+        <div class="side_card">
+            
+            <div class="card1" onclick="TakeAttendance()">
+                <h1>TAKE ATTENDANCE</h1>
+                <button class="btn">TAKE</button>
+        </div>
+            <br>
+            <div class="card1" onclick="viewAttendance()">
+                    <h1>VIEW ATTENDANCE</h1>
+                    <button class="btn">VIEW</button>
+            </div>
+            <div class="card1" onclick="Addstudent()">
+                <h1>ADD STUDENT</h1>
+                <button class="btn">ADD</button>
+        </div>
+            <div class="card1" onclick="Search_stuentd()">
+                <h1>REMOVE STUDENT</h1>
+                <button class="btn">REMOVE</button>
+        </div>
+            
+        </div>
+    </div>
+    <div id="loading-screen">
+        Loading, please wait...
+    </div>
+    
+</body>
+
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='javascript/functions.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Student Attendance System</title>
+    <style>
+        .charts-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .chart-wrapper {
+            flex: 1;
+            margin: 20px;
+            min-width: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>UECM</h2>
+        </div>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/attendance_view">Attendance</a></li>
+            <li><a href="#">Students</a></li>
+            <li><a href="/classes">classes</a></li>
+            <li><a href="#">Settings</a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <header>
+            <h1>Student Attendance System</h1>
+        </header>
+        <div class="content">
+            <div class="card card1" onclick="TakeAttendance()">
+                <h1>Take Attendance</h1>
+                <button class="btn">Take</button>
+            </div>
+            <div class="card card2" onclick="viewAttendance()">
+                <h1>View Attendance</h1>
+                <button class="btn">View</button>
+            </div>
+            <div class="card card3" onclick="Addstudent()">
+                <h1>Add Student</h1>
+                <button class="btn">Add</button>
+            </div>
+            <div class="card card4" onclick="delete_student()">
+                <h1>Remove Student</h1>
+                <button class="btn">Remove</button>
+            </div>
+        </div>
+        <div class="analytics charts-container">
+            <div class="chart-wrapper">
+                <canvas id="todayAttendancePieChart" width="600" height="250"></canvas>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="overallAttendanceChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+        <div id="loading-screen">
+            Loading, please wait...
+        </div>
+    </div>
+    <script>
+        Promise.all([
+            fetch('/get_today_attendance_data').then(response => response.json()),
+            fetch('/get_attendance_data').then(response => response.json())
+        ]).then(([todayData, overallData]) => {
+            // Alert message for successful data retrieval
+            // lert('Attendance data fetched successfully.');a
+
+            // Extract student names and roll numbers for today's attendance
+            const todayStudents = todayData.students.names;
+            const todayRollNos = todayData.students.roll_no;
+
+            // Extract student names and attendance percentages for overall attendance
+            const overallStudents = overallData.students.names;
+            const overallPercentages = overallData.students.attendance;
+
+            // Calculate today's attendance percentage
+            const presentStudentsCount = todayRollNos.length;
+            const totalStudentsCount = overallStudents.length; // Use the length of overallStudents to get the total number of students
+            const absentStudentsCount = totalStudentsCount - presentStudentsCount;
+
+            // Create a pie chart for today's attendance
+            const todayPieCtx = document.getElementById('todayAttendancePieChart').getContext('2d');
+            const todayPieChart = new Chart(todayPieCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Present', 'Absent'],
+                    datasets: [{
+                        label: 'Today\'s Attendance',
+                        data: [presentStudentsCount, absentStudentsCount],
+                        backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+                        borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Today\'s Attendance'
+                        }
+                    }
+                }
+            });
+
+            // Create a bar chart for overall attendance
+            const overallCtx = document.getElementById('overallAttendanceChart').getContext('2d');
+            const overallChart = new Chart(overallCtx, {
+                type: 'bar',
+                data: {
+                    labels: overallStudents,
+                    datasets: [{
+                        label: 'Overall Attendance Percentage',
+                        data: overallPercentages,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Attendance Percentage'
+                            }
+                        }
+                    }
+                }
+            });
+        }).catch(error => {
+            // Alert message for error in data retrieval
+            alert('Error fetching attendance data: ' + error.message);
+        });
+    </script>
+</body>
+
+</html>

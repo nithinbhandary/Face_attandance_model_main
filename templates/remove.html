@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
+    <script src="{{ url_for('static', filename='javascript/remove.js') }}"></script>
+    <title>REMOVE STUDENT</title>
+    <style>
+        /* Additional custom styles can be added here */
+        body {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+        .jumbotron {
+            background-color: #f8f9fa;
+            padding: 2rem 1rem;
+            border-radius: .3rem;
+        }
+        .container {
+            max-width: 960px;
+        }
+        .form-label {
+            margin-bottom: 0.5rem;
+        }
+        .mt-5 {
+            margin-top: 3rem;
+        }
+        .alert {
+            margin-bottom: 1rem;
+        }
+        .btn {
+            margin-top: 0.5rem;
+        }
+        .home-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="jumbotron text-center">
+        <h1 class="display-4">REMOVE STUDENT HERE</h1>
+    </div>
+    <hr>
+
+    <div class="container">
+        <!-- Home button -->
+      
+
+        <form action="/search_rollno" method="POST" id="attn-form">
+            <div class="mb-3">
+                <label for="rollno" class="form-label">Enter Roll No:</label>
+                <input type="number" id="selected_number" name="rollno" required value="{{ rollno }}" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-outline-success">Search</button>
+        </form>
+
+        {% if no_data %}
+        <div class="alert alert-warning" role="alert">
+            No attendance data available for the selected date.
+        </div>
+        {% endif %}
+
+        <h2 class="mt-5">Student Detail</h2>
+        <form action="/delete_student" method="post">
+            <div class="mb-3">
+                <label for="rollno" class="form-label">ROLL NO:</label>
+                <input type="text" id="roll_no" name="roll_no" value="{{ roll_no }}" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="name" class="form-label">NAME:</label>
+                <input type="text" id="name" name="sname" value="{{ name }}" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-danger">REMOVE</button>
+            <a href="/" class="btn btn-primary">Back to Home</a>
+        </form>
+        {% if deletion_status %}
+        <div class="alert alert-success mt-3" role="alert">
+            {{ deletion_status }}
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</body>
+</html>

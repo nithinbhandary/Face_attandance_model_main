@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Classes</title>
+    <style>
+        .class-card {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 20px;
+            cursor: pointer;
+        }
+
+        .class-details {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>SDM</h2>
+        </div>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/attendance_view">Attendance</a></li>
+            <li><a href="#">Students</a></li>
+            <li><a href="/classes">Classes</a></li>
+            <li><a href="#">Settings</a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <header>
+            <h1>Classes</h1>
+        </header>
+        <div class="content">
+            {% for class_summary in class_summaries %}
+            <div class="class-card" onclick="loadClassDetails('{{ class_summary.class }}')">
+                <h2>{{ class_summary.class }}</h2>
+                <p>Total Students: {{ class_summary.total_students }}</p>
+                <div id="details-{{ class_summary.class }}" class="class-details"></div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        function loadClassDetails(className) {
+            const detailsDiv = document.getElementById(`details-${className}`);
+            if (detailsDiv.style.display === 'block') {
+                detailsDiv.style.display = 'none';
+                return;
+            }
+
+            fetch(`/class/${className}`)
+                .then(response => response.json())
+                .then(data => {
+                    detailsDiv.innerHTML = `
+                        <h3>Student Details</h3>
+                        <div class="chart-container">
+                            <canvas id="chart-${className}"></canvas>
+                        </div>
+                        <table>
+                            <tr>
+                                <th>Name</th>
+                                <th>Roll No</th>
+                                <th>Attendance</th>
+                            </tr>
+                            ${data.map(student => `
+                                <tr>
+                                    <td>${student.name}</td>
+                                    <td>${student.roll_no}</td>
+                                    <td>${(parseFloat(student.attendance) || 0).toFixed(2)}%</td>
+                                </tr>
+                            `).join('')}
+                        </table>
+                    `;
+                    detailsDiv.style.display = 'block';
+                    renderChart(className, data);
+                })
+                .catch(error => {
+                    detailsDiv.innerHTML = `<p>Error loading details: ${error.message}</p>`;
+                    detailsDiv.style.display = 'block';
+                });
+        }
+
+        function renderChart(className, data) {
+            const ctx = document.getElementById(`chart-${className}`).getContext('2d');
+            const labels = data.map(student => student.name);
+            const attendanceData = data.map(student => parseFloat(student.attendance) || 0);
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Attendance Percentage',
+                        data: attendanceData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Attendance Percentage'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
