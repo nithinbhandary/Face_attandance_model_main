@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/remove.css')}}">
     <script src="{{ url_for('static', filename='javascript/remove.js') }}"></script>
     <title>REMOVE STUDENT</title>
     <style>
@@ -12,9 +12,10 @@
         body {
             padding-top: 3rem;
             padding-bottom: 3rem;
+            backgroundColor: #f8f9fa;
         }
         .jumbotron {
-            background-color: #f8f9fa;
+            background-color:rgb(255, 255, 255);
             padding: 2rem 1rem;
             border-radius: .3rem;
         }
@@ -75,7 +76,7 @@
                 <input type="text" id="name" name="sname" value="{{ name }}" class="form-control">
             </div>
             <button type="submit" class="btn btn-danger">REMOVE</button>
-            <a href="/" class="btn btn-primary">Back to Home</a>
+            <a href="/backhome" class="btn btn-primary">Back to Home</a>
         </form>
         {% if deletion_status %}
         <div class="alert alert-success mt-3" role="alert">

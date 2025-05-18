@@ -33,17 +33,16 @@
             <li><a href="/backhome">Home</a></li>
             <li><a href="/attendance_view">Attendance</a></li>
             <li><a href="#">Students</a></li>
-            <li><a href="/Classes">classes</a></li>
+            <li><a href="/Classes">Classes</a></li>
             <li><a href="#">Settings</a></li>
             <li><a href="/logout">Logout</a></li>
-            
-        </header>
         </ul>
     </div>
     <div class="main-content">
         <header>
             <h1>Student Attendance System</h1>
-            
+        
+        </header>
         <div class="content">
             <div class="card card1" onclick="TakeAttendance()">
                 <h1>Take Attendance</h1>
@@ -53,7 +52,14 @@
                 <h1>View Attendance</h1>
                 <button class="btn">View</button>
             </div>
-            
+            <div class="card card3" onclick="Addstudent()">
+                <h1>Add Student</h1>
+                <button class="btn">Add</button>
+            </div>
+            <div class="card card4" onclick="delete_student()">
+                <h1>Remove Student</h1>
+                <button class="btn">Remove</button>
+            </div>
         </div>
         <div class="analytics charts-container">
             <div class="chart-wrapper">
@@ -122,9 +128,10 @@
                     datasets: [{
                         label: 'Overall Attendance Percentage',
                         data: overallPercentages,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(97, 211, 99, 0.68)',
+                        borderColor: 'rgb(160, 232, 232)',
                         borderWidth: 1
+                    
                     }]
                 },
                 options: {
@@ -143,10 +150,10 @@
                             grid: {
                             color: 'rgba(160, 232, 232, 0.47)'  
                          }
-                        }
                     }
                 }
-            });
+            }
+        });
         }).catch(error => {
             // Alert message for error in data retrieval
             alert('Error fetching attendance data: ' + error.message);

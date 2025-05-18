@@ -10,10 +10,10 @@ def delect_from_db(rno):
                                  database='attendance')
 
     cursor = conn.cursor()
-
+    
+    cursor.execute("DELETE FROM attendance.users WHERE username = ( select name FROM attendance.studentdetails WHERE roll_no =%s);", (rno,))
     cursor.execute("DELETE FROM attendance.studentdetails WHERE roll_no = %s", (rno,))
     cursor.execute("DELETE FROM attendance WHERE roll_no = %s", (rno,))
-
     conn.commit()
     conn.close()
 
